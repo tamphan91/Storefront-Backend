@@ -5,6 +5,7 @@ dotenv.config()
 const {
     POSTGRES_HOST,
     POSTGRES_DB,
+    POSTGRES_PORT,
     POSTGRES_USER,
     POSTGRES_PASSWORD,
 } = process.env 
@@ -12,13 +13,9 @@ const {
 const client = new Pool({
     host: POSTGRES_HOST,
     database: POSTGRES_DB,
+    port: parseInt(POSTGRES_PORT as string),
     user: POSTGRES_USER,
     password: POSTGRES_PASSWORD,
 })
-
-client
-  .query('SELECT $1::text as name', ['brianc'])
-  .then((res) => console.log(res.rows[0].name)) // brianc
-  .catch((err) => console.error('Error executing query', err.stack))
 
 export default client
