@@ -1,4 +1,4 @@
-import express, { Express, Request, Response } from 'express';
+import express, { Express, NextFunction, Request, Response } from 'express';
 import dotenv from 'dotenv';
 import client from './config/database';
 import routes from './routes/index';
@@ -7,7 +7,8 @@ dotenv.config();
 
 const app: Express = express();
 const port = process.env.PORT;
-
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
 app.use('/api',routes);
 
 app.get('/', (req: Request, res: Response) => {

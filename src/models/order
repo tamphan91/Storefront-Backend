@@ -1,3 +1,0 @@
-export class Order {
-  constructor(public id: string, public productId: string, public quantity: number, public status: string) {}
-}

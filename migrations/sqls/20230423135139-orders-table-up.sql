@@ -1,7 +1,7 @@
 CREATE TABLE orders (
     id SERIAL PRIMARY  KEY,
-    productId SERIAL,
-    userId SERIAL,
+    product_id SERIAL,
+    user_id SERIAL,
     quantity INTEGER,
     status VARCHAR(255)
 );
