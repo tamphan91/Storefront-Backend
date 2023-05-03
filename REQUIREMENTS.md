@@ -22,21 +22,27 @@ These are the notes from a meeting with the frontend developer that describe wha
 
 ## Data Shapes
 #### Product
--  id
-- name
-- price
-- [OPTIONAL] category
+|columns | data_type|
+|----------|:-------------:|
+| id | integer|
+| name| VARCHAR|
+| price| decimal|
+| [OPTIONAL] category |VARCHAR|
 
 #### User
-- id
-- userName
-- firstName
-- lastName
-- password
+|columns | data_type |
+|----------|:-------------:|
+|id                |integer|
+|user_name         |VARCHAR|
+|first_name        |VARCHAR|
+|last_name         |VARCHAR|
+|password          |VARCHAR|
 
 #### Orders
-- id
-- id of each product in the order
-- quantity of each product in the order
-- user_id
-- status of order (active or complete)
+|columns                                         |data_type|
+|----------|:-------------:|
+|id                                              |integer|
+|product_id                                      |integer|
+|quantity                                        |integer|
+|user_id                                         |integer|
+|status of order (active or complete)            |VARCHAR|
