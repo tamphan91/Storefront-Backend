@@ -9,7 +9,7 @@ export interface Order {
   id?: number;
   productId: number;
   userId: number;
-  quantity: string;
+  quantity: number;
   status?: OrderStatus;
 }
 

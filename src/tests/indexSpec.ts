@@ -1,5 +1,64 @@
 import supertest from 'supertest';
 import app from '../server';
+import { Product, ProductStore } from '../models/product';
+import { User, UserStore } from '../models/user';
+import { hashPassword } from '../util';
+import OrderStore, { Order } from '../models/order';
+
+describe('Test Product Model', async () => {
+  const store = new ProductStore();
+  let products: Product[];
+  it('Expected result of index func is array', async () => {
+    products = await store.index();
+    expect(products).toBeInstanceOf(Array);
+  });
+  it('Expected result of create func is greater than 0', async () => {
+    expect(
+      await store.create({ name: 'product' + products.length, price: products.length, category: 'category' + products.length })
+    ).toBeGreaterThan(0);
+  });
+  it('Expected result of show func is not null', async () => {
+    expect(await store.show('1')).not.toBeNull();
+  });
+});
+
+describe('Test User Model', async () => {
+  const store = new UserStore();
+  let users: User[];
+  it('Expected result of index func is array', async () => {
+    users = await store.index();
+    expect(users).toBeInstanceOf(Array);
+  });
+  it('Expected result of create func is not null', async () => {
+    expect(await store.create({ username: 'admin' + users.length, password: hashPassword('admin' + users.length) })).not.toBeNull();
+  });
+  it('Expected result of show func is not null', async () => {
+    expect(await store.show('1')).not.toBeNull();
+  });
+  it('Expected result of authenticate func is not null', async () => {
+    expect(await store.authenticate('admin0', 'admin0')).not.toBeNull();
+  });
+  it('Expected result of authenticate func is null', async () => {
+    expect(await store.authenticate('admin0', 'admin99')).toBeNull();
+  });
+});
+
+describe('Test Order Model', async () => {
+  const store = new OrderStore();
+  let orders: Order[];
+  it('Expected result of index func is array', async () => {
+    orders = await store.index('1');
+    expect(orders).toBeInstanceOf(Array);
+  });
+  it('Expected result of create func is not null', async () => {
+    expect(
+      await store.create({productId: 1, userId: 1, quantity: 1})
+    ).not.toBeNull();
+  });
+  it('Expected result of show func is not null', async () => {
+    expect(await store.show('1', '1')).not.toBeNull();
+  });
+});
 
 const request = supertest(app);
 let token: string;
@@ -9,23 +68,13 @@ describe('Test endpoint responses', () => {
     const response = await request.get('/');
     expect(response.status).toBe(200);
   });
-
-  it('Check user and create user for login', async () => {
-    const response = await request
-      .post('/api/login')
-      .send({ username: 'admin', password: 'admin' })
-      .set('Accept', 'application/json');
-    if (response.status === 401) {
-      await request.post('/api/users').send({ username: 'admin', password: 'admin' }).set('Accept', 'application/json');
-    }
-  });
 });
 
 describe('Test /login endpoint', () => {
   it('Login successfully', async () => {
     const response = await request
       .post('/api/login')
-      .send({ username: 'admin', password: 'admin' })
+      .send({ username: 'admin0', password: 'admin0' })
       .set('Accept', 'application/json');
     expect(response.status).toBe(200);
     token = response.body.token;

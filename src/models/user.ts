@@ -4,8 +4,8 @@ const pepper = process.env.BCRYPT_PASSWORD;
 export interface User {
   id?: number;
   username: string;
-  firstName: string;
-  lastName: string;
+  firstName?: string;
+  lastName?: string;
   password: string;
 }
 

@@ -1,10 +1,9 @@
 import { Request, RequestHandler, Response } from 'express';
 import { User, UserStore } from '../models/user';
-import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
+import { hashPassword } from '../util';
 
-const saltRounds = process.env.SALT_PASSWORD;
-const pepper = process.env.BCRYPT_PASSWORD;
+
 const privateKey = process.env.TOKEN_SECRET;
 
 const store = new UserStore();
@@ -24,7 +23,7 @@ export const createUser: RequestHandler = async (req: Request, res: Response) =>
     return res.status(400).send({ message: `${user.username == null ? 'username' : 'password'} is required` });
   }
 
-  const hash = bcrypt.hashSync(user.password + pepper, parseInt(saltRounds as string));
+  const hash = hashPassword(user.password);
   try {
     await store.create({
       username: user.username,
