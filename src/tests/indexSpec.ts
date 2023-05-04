@@ -5,6 +5,19 @@ import { User, UserStore } from '../models/user';
 import { hashPassword } from '../util';
 import OrderStore, { Order } from '../models/order';
 
+beforeAll( async () => {
+  const store1 = new UserStore();
+  const user = await store1.authenticate('admin', 'admin');
+  if(user == null) {
+    await store1.create({ username: 'admin', password: hashPassword('admin')});
+  }
+  const store2 = new ProductStore();
+  const products = await store2.index();
+  if(products.length == 0) {
+    await store2.create({ name: 'product', price: 1, category: 'category' })
+  }
+})
+
 describe('Test Product Model', async () => {
   const store = new ProductStore();
   let products: Product[];
@@ -33,10 +46,10 @@ describe('Test User Model', async () => {
     expect(await store.create({ username: 'admin' + users.length, password: hashPassword('admin' + users.length) })).not.toBeNull();
   });
   it('Expected result of show func is not null', async () => {
-    expect(await store.show('1')).not.toBeNull();
+    expect(await store.show(1)).not.toBeNull();
   });
   it('Expected result of authenticate func is not null', async () => {
-    expect(await store.authenticate('admin0', 'admin0')).not.toBeNull();
+    expect(await store.authenticate('admin', 'admin')).not.toBeNull();
   });
   it('Expected result of authenticate func is null', async () => {
     expect(await store.authenticate('admin0', 'admin99')).toBeNull();
@@ -52,7 +65,7 @@ describe('Test Order Model', async () => {
   });
   it('Expected result of create func is not null', async () => {
     expect(
-      await store.create({productId: 1, userId: 1, quantity: 1})
+      await store.create(1)
     ).not.toBeNull();
   });
   it('Expected result of show func is not null', async () => {
@@ -74,7 +87,7 @@ describe('Test /login endpoint', () => {
   it('Login successfully', async () => {
     const response = await request
       .post('/api/login')
-      .send({ username: 'admin0', password: 'admin0' })
+      .send({ username: 'admin', password: 'admin' })
       .set('Accept', 'application/json');
     expect(response.status).toBe(200);
     token = response.body.token;
@@ -123,15 +136,24 @@ describe('Test /products endpoint', () => {
 });
 
 describe('Test /orders endpoint', () => {
-  it('Check order and create order', async () => {
-    const response = await request.get('/api/orders').set('Authorization', 'Bearer ' + token);
-    if ((response.body as []).length === 0) {
+
+  let orderId: string;
+  it('create order', async () => {
+    const response = await request
+      .post('/api/orders')
+      .send({})
+      .set('Authorization', 'Bearer ' + token)
+      .set('Accept', 'application/json');
+    expect(response.status).toBe(200);
+    orderId = response.body.id;
+  });
+
+  it('add product', async () => {
       await request
-        .post('/api/orders')
+        .post(`/api/orders/${orderId}/products`)
         .send({ productId: 1, quantity: 1 })
         .set('Authorization', 'Bearer ' + token)
         .set('Accept', 'application/json');
-    }
   });
 
   it('get orders failed', async () => {

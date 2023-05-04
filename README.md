@@ -20,7 +20,14 @@ Storefront Backend
 - npm run start
 ```
 ### ENDPOINTS (you can use Udacity.postman_collection.json to import to Postman to testing)
-- http://localhost:8000/api/login
-- http://localhost:8000/api/products
-- http://localhost:8000/api/users
-- http://localhost:8000/api/orders
+- http://localhost:8000/api/login POST
+- http://localhost:8000/api/products GET
+- http://localhost:8000/api/products POST
+- http://localhost:8000/api/products/:id GET
+- http://localhost:8000/api/users GET
+- http://localhost:8000/api/users/:id GET
+- http://localhost:8000/api/users POST
+- http://localhost:8000/api/orders GET
+- http://localhost:8000/api/orders/:id GET
+- http://localhost:8000/api/orders POST
+- http://localhost:8000/api/orders/:id/products

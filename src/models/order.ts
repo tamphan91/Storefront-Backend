@@ -1,8 +1,8 @@
 import Client from '../config/database';
 
 enum OrderStatus {
-  Active = "ACTIVE",
-  Complete = "COMPLETE"
+  Active = 'ACTIVE',
+  Complete = 'COMPLETE',
 }
 
 export interface Order {
@@ -14,7 +14,7 @@ export interface Order {
 }
 
 export default class OrderStore {
-  async index(userId: string): Promise<Order[]>{
+  async index(userId: string): Promise<Order[]> {
     try {
       const conn = await Client.connect();
       const sql = 'SELECT * FROM orders Where user_id=$1';
@@ -38,16 +38,28 @@ export default class OrderStore {
     }
   }
 
-  async create(order: Order): Promise<Order>{
+  async create(userId: number): Promise<Order> {
     try {
       const conn = await Client.connect();
-      const sql = 'INSERT INTO orders (product_id, user_id, quantity, status) VALUES($1, $2, $3, $4)';
-      const result = await conn.query(sql, [order.productId, order.userId, order.quantity, OrderStatus.Active]);
+      const sql = 'INSERT INTO orders (user_id, status) VALUES($1, $2)';
+      const result = await conn.query(sql, [userId, OrderStatus.Active]);
       conn.release();
       return result.rows[0];
-    } catch (error){
+    } catch (error) {
       throw new Error(`Could not add new order. Error: ${error}`);
     }
   }
 
+  async addProduct(quantity: number, orderId: string, productId: string): Promise<Order> {
+    try {
+      const sql = 'INSERT INTO orders_products (quantity, order_id, product_id) VALUES($1, $2, $3)';
+      const conn = await Client.connect();
+      const result = await conn.query(sql, [quantity, orderId, productId]);
+      const order = result.rows[0];
+      conn.release();
+      return order;
+    } catch (err) {
+      throw new Error(`Could not add product ${productId} to order ${orderId}: ${err}`);
+    }
+  }
 }

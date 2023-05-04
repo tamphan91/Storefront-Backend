@@ -51,7 +51,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"name\": \"product4\",\r\n    \"price\": 4,\r\n    \"category\": \"category 4\"\r\n}",
+					"raw": "{\r\n    \"name\": \"product2\",\r\n    \"price\": 4,\r\n    \"category\": \"category2\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -231,7 +231,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"productId\": 1,\r\n    \"quantity\": 2\r\n}",
+					"raw": "{\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -246,6 +246,45 @@
 					"path": [
 						"api",
 						"orders"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "add product",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"quantity\": 2,\r\n    \"productId\": 2\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/api/orders/1/products",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"orders",
+						"1",
+						"products"
 					]
 				}
 			},

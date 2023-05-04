@@ -38,7 +38,7 @@ export const createUser: RequestHandler = async (req: Request, res: Response) =>
 };
 
 export const getUserById: RequestHandler = async (req: Request, res: Response) => {
-  const result: User = await store.show(req.params.id as string);
+  const result: User = await store.show(parseInt(req.params.id));
   if(result){
     res.json(result);
   } else {

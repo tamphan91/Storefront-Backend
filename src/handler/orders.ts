@@ -14,15 +14,11 @@ export const getOrders: RequestHandler = async (req: Request, res: Response) => 
   }
 };
 
-export const createOrder: RequestHandler = async (req: Request, res: Response) => {
-  const order = req.body;
-  if (order.productId == null || order.quantity == null) {
-    return res.status(400).send({ message: `${order.productId == null ? 'ProductId' : 'Quantity'} is required` });
-  }
+export const createOrder: RequestHandler = async (_: Request, res: Response) => {
   const currentUser = res.locals.user as User;
   const userId = currentUser.id!;
   try {
-    await store.create({ productId: order.productId, userId: userId, quantity: order.quantity });
+    await store.create(userId);
     res.json({message : 'Create order success'});
   } catch (error) {
     return res.status(500).send({ message: `${(error as Error).message}`});
@@ -43,3 +39,15 @@ export const getOrderById: RequestHandler = async (req: Request, res: Response) 
     return res.status(500).send({ message: `${(error as Error).message}`});
   }
 };
+
+export const addProduct = async (req: Request, res: Response) => {
+  const orderId: string = req.params.id;
+  const productId: string = req.body.productId;
+  const quantity: number = parseInt(req.body.quantity);
+  try {
+    await store.addProduct(quantity, orderId, productId);
+    res.json({message : 'add product success'});
+  } catch(error) {
+    return res.status(500).send({ message: `${(error as Error).message}`});
+  }
+} 
