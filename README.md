@@ -30,4 +30,4 @@ Storefront Backend
 - http://localhost:8000/api/orders GET
 - http://localhost:8000/api/orders/:id GET
 - http://localhost:8000/api/orders POST
-- http://localhost:8000/api/orders/:id/products
+- http://localhost:8000/api/orders/:id/products POST
